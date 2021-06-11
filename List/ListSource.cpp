@@ -47,10 +47,19 @@ public:
 			Temp = Temp->pNext;
 			return old;
 		}
-		bool operator==(const Iterator& other) {
+		Iterator& operator--() {
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		Iterator  operator--(int) {
+			Iterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		bool operator==(const Iterator& other)const {
 			return this->Temp == other.Temp;
 		}
-		bool operator!=(const Iterator& other) {
+		bool operator!=(const Iterator& other)const {
 			return this->Temp != other.Temp;
 		}
 		const int& operator*()const {
@@ -61,13 +70,59 @@ public:
 		}
 
 	};
+	class ReverseIterator
+	{
+		Element* Temp;
+	public:
+		ReverseIterator(Element* Temp = nullptr) :Temp(Temp) {
+		}
+		~ReverseIterator() {
+		}
 
+		ReverseIterator& operator--() {
+			Temp = Temp->pNext;
+			return *this;
+		}
+		ReverseIterator  operator--(int) {
+			ReverseIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+		ReverseIterator& operator++() {
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		ReverseIterator  operator++(int) {
+			ReverseIterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+		bool operator==(const ReverseIterator& other)const {
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const ReverseIterator& other)const {
+			return this->Temp != other.Temp;
+		}
+		const int& operator*()const {
+			return Temp->Data;
+		}
+		int& operator*() {
+			return Temp->Data;
+		}
+	};
 	Iterator begin() {
 		return Head;
 	}
 	Iterator end() {
 		return nullptr;
 	}
+	ReverseIterator rbegin() {
+		return Tail;
+	}
+	ReverseIterator rend() {
+		return nullptr;
+	}
+
 	List() {
 		Head = Tail = nullptr;
 		size = 0;
@@ -145,7 +200,6 @@ public:
 			Temp = Tail;
 			for (size_t i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
 		}
-		//Element* New = new Element(Data);
 		Temp->pPrev = Temp->pPrev->pNext = new Element(Data, Temp, Temp->pPrev);
 		size++;
 	}
@@ -225,9 +279,9 @@ public:
 
 void main() {
 	setlocale(LC_ALL, "Russian");
-	int n;
-	cout << "Введите Размер Списка:"; cin >> n;
 	List list = { 3,5,8,13 };
-	for (int i : list) cout << i << endl;
+	for (List::ReverseIterator It = list.rbegin(); It != list.rend(); It++) 
+		cout << *It << tab;
+	cout << endl;
 
 }
