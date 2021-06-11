@@ -28,12 +28,29 @@ class List
 	Element* Head;
 	Element* Tail;
 	unsigned int size;
-public:
-	class Iterator
-	{
+
+	class BaseIterator {
+	protected:
 		Element* Temp;
 	public:
-		Iterator(Element* Temp = nullptr) :Temp(Temp) {
+		BaseIterator(Element* Temp = nullptr) :Temp(Temp) {
+		}
+		~BaseIterator() {
+		}
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
+	};
+public:
+	class Iterator:BaseIterator
+	{
+	public:
+		Iterator(Element* Temp = nullptr) :BaseIterator(Temp) {
 		}
 		~Iterator() {
 		}
@@ -62,21 +79,16 @@ public:
 		bool operator!=(const Iterator& other)const {
 			return this->Temp != other.Temp;
 		}
-		const int& operator*()const {
-			return Temp->Data;
-		}
-		int& operator*() {
-			return Temp->Data;
-		}
 
 	};
-	class ReverseIterator
+	class ReverseIterator:public BaseIterator
 	{
-		Element* Temp;
 	public:
-		ReverseIterator(Element* Temp = nullptr) :Temp(Temp) {
+		ReverseIterator(Element* Temp = nullptr) :BaseIterator(Temp) 
+		{
 		}
-		~ReverseIterator() {
+		~ReverseIterator() 
+		{
 		}
 
 		ReverseIterator& operator--() {
@@ -102,12 +114,6 @@ public:
 		}
 		bool operator!=(const ReverseIterator& other)const {
 			return this->Temp != other.Temp;
-		}
-		const int& operator*()const {
-			return Temp->Data;
-		}
-		int& operator*() {
-			return Temp->Data;
 		}
 	};
 	Iterator begin() {
