@@ -1,5 +1,6 @@
-#include "ClassList.cpp"
+#pragma once
 #include<iostream>
+#include "ClassList.h"
 using namespace std;
 using std::cin;
 using std::cout;

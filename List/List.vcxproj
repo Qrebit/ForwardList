@@ -139,9 +139,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ClassList.cpp" />
-    <ClCompile Include="ClassParts.cpp" />
     <ClCompile Include="ListSource.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ClassList.h" />
+    <ClInclude Include="ClassParts.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

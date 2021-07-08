@@ -1,6 +1,6 @@
 #pragma warning(disable:4326)
 #include<iostream>
-#include"ClassParts.cpp"
+#include"ClassParts.h"
 using namespace std;
 using std::cin;
 using std::cout;
