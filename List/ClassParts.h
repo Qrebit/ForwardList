@@ -6,6 +6,8 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+#define tab "\t"
+
 template<typename T>size_t List<T>::getSize()const
 {
 	return size;
