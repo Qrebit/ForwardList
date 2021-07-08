@@ -1,42 +1,72 @@
 #pragma warning(disable:4326)
 #include<iostream>
-
 using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
 
 #define tab "\t"
 
-class List 
+class List
 {
-	class Element 
+	class Element
 	{
-		int Data;
+		int Data;	
 		Element* pNext;
-		Element* pPrev;
+		Element* pPrev;	
 	public:
-		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr) {
+		Element(int Data, Element* pNext = nullptr, Element* pPrev = nullptr)
+		{
 			this->Data = Data;
 			this->pNext = pNext;
 			this->pPrev = pPrev;
-			cout << "ECons:\t" << this << endl;
 		}
-		~Element() 
-		{
-			cout << "EDest:\t" << this << endl;
-		}
+		~Element(){}
 		friend class List;
 	};
 	Element* Head;
 	Element* Tail;
 	unsigned int size;
-
-	class BaseIterator {
-	protected:
+public:
+	class Iterator
+	{
 		Element* Temp;
 	public:
-		BaseIterator(Element* Temp = nullptr) :Temp(Temp) {
+		Iterator(Element* Temp = nullptr) :Temp(Temp) {}
+		~Iterator(){}
+		Iterator& operator++()
+		{
+			Temp = Temp->pNext;
+			return *this;
 		}
-		~BaseIterator() {
+
+		Iterator operator++(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pNext;
+			return old;
 		}
+		Iterator& operator--()
+		{
+			Temp = Temp->pPrev;
+			return *this;
+		}
+		Iterator operator--(int)
+		{
+			Iterator old = *this;
+			Temp = Temp->pPrev;
+			return old;
+		}
+
+		bool operator==(const Iterator& other)const
+		{
+			return this->Temp == other.Temp;
+		}
+		bool operator!=(const Iterator& other)const
+		{
+			return this->Temp != other.Temp;
+		}
+
 		const int& operator*()const
 		{
 			return Temp->Data;
@@ -46,174 +76,171 @@ class List
 			return Temp->Data;
 		}
 	};
-public:
-	class Iterator:BaseIterator
+	class ReverseIterator
 	{
+		Element* Temp;
 	public:
-		Iterator(Element* Temp = nullptr) :BaseIterator(Temp) {
-		}
-		~Iterator() {
-		}
+		ReverseIterator(Element* Temp = nullptr) :Temp(Temp){}
+		~ReverseIterator(){}
 
-		Iterator& operator++() {
-			Temp = Temp->pNext;
-			return *this;
-		}
-		Iterator  operator++(int) {
-			Iterator old = *this;
-			Temp = Temp->pNext;
-			return old;
-		}
-		Iterator& operator--() {
-			Temp = Temp->pPrev;
-			return *this;
-		}
-		Iterator  operator--(int) {
-			Iterator old = *this;
-			Temp = Temp->pPrev;
-			return old;
-		}
-		bool operator==(const Iterator& other)const {
-			return this->Temp == other.Temp;
-		}
-		bool operator!=(const Iterator& other)const {
-			return this->Temp != other.Temp;
-		}
-
-	};
-	class ReverseIterator:public BaseIterator
-	{
-	public:
-		ReverseIterator(Element* Temp = nullptr) :BaseIterator(Temp) 
+		ReverseIterator& operator++()
 		{
-		}
-		~ReverseIterator() 
-		{
-		}
-
-		ReverseIterator& operator--() {
-			Temp = Temp->pNext;
-			return *this;
-		}
-		ReverseIterator  operator--(int) {
-			ReverseIterator old = *this;
-			Temp = Temp->pNext;
-			return old;
-		}
-		ReverseIterator& operator++() {
 			Temp = Temp->pPrev;
 			return *this;
 		}
-		ReverseIterator  operator++(int) {
+		ReverseIterator operator++(int)
+		{
 			ReverseIterator old = *this;
 			Temp = Temp->pPrev;
 			return old;
 		}
-		bool operator==(const ReverseIterator& other)const {
+		ReverseIterator& operator--()
+		{
+			Temp = Temp->pNext;
+			return *this;
+		}
+		ReverseIterator operator--(int)
+		{
+			ReverseIterator old = *this;
+			Temp = Temp->pNext;
+			return old;
+		}
+
+		bool operator==(const ReverseIterator& other)const
+		{
 			return this->Temp == other.Temp;
 		}
-		bool operator!=(const ReverseIterator& other)const {
+		bool operator!=(const ReverseIterator& other)const
+		{
 			return this->Temp != other.Temp;
 		}
+
+		const int& operator*()const
+		{
+			return Temp->Data;
+		}
+		int& operator*()
+		{
+			return Temp->Data;
+		}
 	};
-	Iterator begin() {
+	size_t getSize()const
+	{
+		return size;
+	}
+
+	Iterator begin()
+	{
 		return Head;
 	}
-	Iterator end() {
+	Iterator end()
+	{
 		return nullptr;
 	}
-	ReverseIterator rbegin() {
+	ReverseIterator rbegin()
+	{
 		return Tail;
 	}
-	ReverseIterator rend() {
+	ReverseIterator rend()
+	{
 		return nullptr;
 	}
 
-	List() {
+	List()
+	{
 		Head = Tail = nullptr;
 		size = 0;
-		cout << "LCons:\t" << this << endl;
+		cout << "LConstructor:\t" << this << endl;
 	}
-	List(initializer_list<int> il) :List() {
-		for (int const* it = il.begin(); it != il.end(); it++) push_back(*it);
+	explicit List(int size) :List()
+	{
+		while (size--)push_back(0);
 	}
-	explicit List(size_t size) :List() {
-		while (size--) push_front(0);
-		cout << "Size LCons:\t" << this << endl;
+	List(const initializer_list<int>& il) :List()
+	{
+		cout << typeid(il.begin()).name() << endl;
+		for (int const* it = il.begin(); it != il.end(); it++)
+			push_back(*it);
 	}
-	~List() {
-		while (Head)pop_front();
-		cout << "LDest:\t" << this << endl;
+	~List()
+	{
+		while (Tail)pop_back();
+		cout << "LDestructor:\t" << this << endl;
 	}
 
-	//Operators
-
-	int& operator[](int index) {
+	//Операторы
+	int& operator[](size_t index)
+	{
 		Element* Temp;
-		if (index < size / 2) {
+		if (index < size / 2)
+		{
 			Temp = Head;
 			for (size_t i = 0; i < index; i++)Temp = Temp->pNext;
 		}
-		else {
+		else
+		{
 			Temp = Tail;
 			for (size_t i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
 		}
 		return Temp->Data;
 	}
 
-	//Adding
-	void push_front(int Data) {
-		if (Head == nullptr and Tail == nullptr)
+	//Добавление
+	void push_front(int Data)
+	{
+		if (Head == nullptr && Tail == nullptr)
 		{
 			Head = Tail = new Element(Data);
 			size++;
 			return;
 		}
-		else
-		{
-			Head = Head->pPrev = new Element(Data, Head);
-			size++;
-		}
+		Head = Head->pPrev = new Element(Data, Head);
+		size++;
 	}
-	void push_back(int Data) {
-		if (Head == nullptr and Tail == nullptr) {
+	void push_back(int Data)
+	{
+		if (Head == nullptr && Tail == nullptr)
+		{
+			Head = Tail = new Element(Data);
+			size++;
+			return;
+		}
+		Tail = Tail->pNext = new Element(Data, nullptr, Tail);
+		size++;
+	}
+	void insert(unsigned int Index, int Data)
+	{
+		if (Index > size)return;
+		if (Index == 0)
+		{
 			push_front(Data);
 			return;
 		}
-		else
+		if (Index == size)
 		{
-			Tail = Tail->pNext = new Element(Data, nullptr, Tail);
-			size++;
-		}
-	}
-
-	void insert(unsigned int index, int Data) {
-		if (index > size)return;
-		if (index == 0) {
-			push_front(Data);
-			return;
-		}
-		if (index == size) {
 			push_back(Data);
 			return;
 		}
 		Element* Temp;
-		if (index < size / 2) {
+		if (Index < size / 2)
+		{
 			Temp = Head;
-			for (size_t i = 0; i < index; i++)Temp = Temp->pNext;
+			for (size_t i = 0; i < Index; i++)Temp = Temp->pNext;
 		}
-		else {
+		else
+		{
 			Temp = Tail;
-			for (size_t i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
+			for (size_t i = 0; i < size - Index - 1; i++)Temp = Temp->pPrev;
 		}
 		Temp->pPrev = Temp->pPrev->pNext = new Element(Data, Temp, Temp->pPrev);
 		size++;
 	}
-	
-	//Erasing
 
-	void pop_front() {
-		if (Head == Tail) {
+	//Удаление
+	void pop_front()
+	{
+		if (Head == Tail)
+		{
 			delete Head;
 			Head = Tail = nullptr;
 			size--;
@@ -224,9 +251,10 @@ public:
 		Head->pPrev = nullptr;
 		size--;
 	}
-
-	void pop_back() {
-		if (Head == Tail) {
+	void pop_back()
+	{
+		if (Head == Tail)
+		{
 			delete Tail;
 			Head = Tail = nullptr;
 			size--;
@@ -237,57 +265,63 @@ public:
 		Tail->pNext = nullptr;
 		size--;
 	}
-	
-	void erase(int index) {
-		if (index == 0) {
+	void erase(size_t index)
+	{
+		if (index == 0)
+		{
 			pop_front();
 			return;
 		}
-		if (index >= size)return;
-		if (index == size - 1) {
+		if (index == size - 1)
+		{
 			pop_back();
 			return;
 		}
+		if (index >= size)return;
+
 		Element* Temp;
-		if (index <= size / 2) {
+		if (index < size / 2)
+		{
 			Temp = Head;
-			for (size_t i = 0; i < index; i++) {
-				Temp = Temp-> pNext;
-			}
+			for (size_t i = 0; i < index; i++)Temp = Temp->pNext;
 		}
-		else {
+		else
+		{
 			Temp = Tail;
-			for (size_t i = 0; i < size - index - 1; i++) {
-				Temp = Temp->pPrev;
-			}
+			for (size_t i = 0; i < size - index - 1; i++)Temp = Temp->pPrev;
 		}
-		Temp->pNext->pPrev = Temp->pPrev;
 		Temp->pPrev->pNext = Temp->pNext;
+		Temp->pNext->pPrev = Temp->pPrev;
 		delete Temp;
 	}
 
-	void print() {
-		for (Element* Temp = Head; Temp; Temp = Temp->pNext) {
-			cout << Temp << tab << Temp->pPrev << tab << Temp->Data << tab <<  Temp->pNext << endl;
-		}
-		cout << "Количество элементов списка:" << size << endl;
-	}
-	void print_reverse() {
-		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev) {
+	//Методы
+	void print()
+	{
+		for (Element* Temp = Head; Temp; Temp = Temp->pNext)
+		{
 			cout << Temp << tab << Temp->pPrev << tab << Temp->Data << tab << Temp->pNext << endl;
 		}
-		cout << "Количество элементов списка:" << size << endl;
+		cout << "Количество элементов списка: " << size << endl;
 	}
-	
-
-
+	void print_reverse()
+	{
+		for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
+			cout << Temp << tab << Temp->pPrev << tab << Temp->Data << tab << Temp->pNext << endl;
+		cout << "Количество элементов списка: " << size << endl;
+	}
 };
 
-void main() {
+void main()
+{
 	setlocale(LC_ALL, "Russian");
-	List list = { 3,5,8,13 };
-	for (List::ReverseIterator It = list.rbegin(); It != list.rend(); It++) 
-		cout << *It << tab;
-	cout << endl;
-
+	int n;	cout << "Введите размер списка: "; cin >> n;
+	List list(n);
+	for (List::Iterator it = list.begin(); it != list.end(); it++)
+	{
+		*it = rand();
+	}
+	list.print();
+	list.print_reverse();
+	cout << "Список заполнен" << endl;
 }
