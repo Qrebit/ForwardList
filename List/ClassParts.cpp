@@ -13,35 +13,35 @@ template<typename T>size_t List<T>::getSize()const
 	return size;
 }
 
-template<typename T>const List<T>::Iterator List<T>::begin()const
+template<typename T>const typename List<T>::Iterator List<T>::begin()const
 {
 	return Head;
 }
-template<typename T>const List<T>::Iterator List<T>::end()const
+template<typename T>const typename List<T>::Iterator List<T>::end()const
 {
 	return nullptr;
 }
-template<typename T>const List<T>::ReverseIterator List<T>::rbegin()const
+template<typename T>const typename List<T>::ReverseIterator List<T>::rbegin()const
 {
 	return Tail;
 }
-template<typename T>const List<T>::ReverseIterator List<T>::rend()const
+template<typename T>const typename List<T>::ReverseIterator List<T>::rend()const
 {
 	return nullptr;
 }
-template<typename T>List<T>::Iterator List<T>::begin()
+template<typename T>typename List<T>::Iterator List<T>::begin()
 {
 	return Head;
 }
-template<typename T>List<T>::Iterator List<T>::end()
+template<typename T>typename List<T>::Iterator List<T>::end()
 {
 	return nullptr;
 }
-template<typename T>List<T>::ReverseIterator List<T>::rbegin()
+template<typename T>typename List<T>::ReverseIterator List<T>::rbegin()
 {
 	return Tail;
 }
-template<typename T>List<T>::ReverseIterator List<T>::rend()
+template<typename T>typename List<T>::ReverseIterator List<T>::rend()
 {
 	return nullptr;
 }
@@ -113,7 +113,7 @@ template<typename T>List<T>& List<T>::operator=(List<T>&& other) {
 	return *this;
 }
 //Добавление
-template<typename T> void push_front(T Data)
+template<typename T> void List<T>::push_front(T Data)
 {
 	if (Head == nullptr && Tail == nullptr)
 	{
@@ -124,7 +124,7 @@ template<typename T> void push_front(T Data)
 	Head = Head->pPrev = new Element(Data, Head);
 	size++;
 }
-template<typename T> void push_back(T Data)
+template<typename T> void List<T>::push_back(T Data)
 {
 	if (Head == nullptr && Tail == nullptr)
 	{
@@ -135,7 +135,7 @@ template<typename T> void push_back(T Data)
 	Tail = Tail->pNext = new Element(Data, nullptr, Tail);
 	size++;
 }
-template<typename T> void insert(unsigned int Index, T Data)
+template<typename T> void List<T>::insert(unsigned int Index, T Data)
 {
 	if (Index > size)return;
 	if (Index == 0)
@@ -164,7 +164,7 @@ template<typename T> void insert(unsigned int Index, T Data)
 }
 
 //Удаление
-template<typename T> void pop_front()
+template<typename T> void List<T>::pop_front()
 {
 	if (Head == Tail)
 	{
@@ -178,7 +178,7 @@ template<typename T> void pop_front()
 	Head->pPrev = nullptr;
 	size--;
 }
-template<typename T> void pop_back()
+template<typename T> void List<T>::pop_back()
 {
 	if (Head == Tail)
 	{
@@ -192,7 +192,7 @@ template<typename T> void pop_back()
 	Tail->pNext = nullptr;
 	size--;
 }
-template<typename T> void erase(size_t index)
+template<typename T> void List<T>::erase(size_t index)
 {
 	if (index == 0)
 	{
@@ -223,7 +223,7 @@ template<typename T> void erase(size_t index)
 }
 
 //Методы
-template<typename T> void print()
+template<typename T> void List<T>::print()
 {
 	for (Element* Temp = Head; Temp; Temp = Temp->pNext)
 	{
@@ -231,7 +231,7 @@ template<typename T> void print()
 	}
 	cout << "Количество элементов списка: " << size << endl;
 }
-template<typename T>List<T> print_reverse()
+template<typename T> void List<T>::print_reverse()
 {
 	for (Element* Temp = Tail; Temp; Temp = Temp->pPrev)
 		cout << Temp << tab << Temp->pPrev << tab << Temp->Data << tab << Temp->pNext << endl;
